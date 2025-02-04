@@ -20,11 +20,12 @@ public class AuthController {
     }
 
     @PostMapping("/host")
-    public String generateToken(@RequestParam Role role) {
-        User user = new User(null, role, null);
-        String token = jwtService.generateToken(user.getId().toString(), role.name());
-        user.setJwtToken(token);
-        userRepository.save(user);
-        return token;
+    public String generateToken(@RequestParam String role) {
+//        User user = new User(null, role, null);
+//        String token = jwtService.generateToken(user.getId().toString(), role.name());
+//        user.setJwtToken(token);
+//        userRepository.save(user);
+//        return token;
+        return "ghj";
     }
 }

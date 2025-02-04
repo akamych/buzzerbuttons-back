@@ -1,10 +1,11 @@
 spring:
+
   application:
     name: Buzzer Buttons
   datasource:
-    url: jdbc:postgresql://localhost:5432/mydatabase
-    username: myuser
-    password: mypassword
+    url: jdbc:postgresql://localhost:5432/${BUZZERS_DB_DB}
+    username: ${BUZZERS_DB_USER}
+    password: ${BUZZERS_DB_PASS}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -15,3 +16,7 @@ jwt:
   secret: "mySuperSecretKey"
   expiration: 600000
   refresh-expiration: 86400000
+
+
+server:
+  port: ${BUZZERS_PORT}
