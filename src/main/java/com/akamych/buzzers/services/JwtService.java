@@ -16,7 +16,7 @@ import java.util.Date;
 @Service
 public class JwtService {
 
-        @Value("${jwt.secret}")
+        @Value("${BUZZERS_JWT_SEC}")
         private String secret;
 
         @Value("${jwt.expiration}")
@@ -62,7 +62,7 @@ public class JwtService {
 
         cookie.setHttpOnly(true);
         cookie.setPath("/");
-        cookie.setMaxAge(60 * 15);
+        cookie.setMaxAge(60 * 60);
         cookie.setSecure(false);
 
         servletResponse.addCookie(cookie);

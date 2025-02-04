@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @RequiredArgsConstructor
@@ -13,8 +14,7 @@ public class GameService {
     private final GameRepository gameRepository;
 
     private Long generateId() {
-        Random random = new Random();
-        return 1L + (random.nextLong() & Long.MAX_VALUE);
+        return ThreadLocalRandom.current().nextLong(100_000_000L, 1_000_000_000L);
     }
 
     public Game createGame() {
@@ -32,7 +32,7 @@ public class GameService {
                 success = true;
             } catch (Exception e) {
                 e.printStackTrace();
-               newGame.setGameId(generateId());
+                newGame.setGameId(generateId());
             }
         }
 

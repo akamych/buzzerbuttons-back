@@ -20,10 +20,12 @@ public class UserService {
 
         Game newGame = gameService.createGame();
 
-        User user = userRepository.saveAndFlush(User.builder()
+        User user = User.builder()
                 .role(UserRolesEnum.HOST.getRole())
                 .game(newGame)
-                .build());
+                .build();
+
+        userRepository.saveAndFlush(user);
 
         user.setJwtToken(jwtService.generateToken(user));
         userRepository.saveAndFlush(user);
