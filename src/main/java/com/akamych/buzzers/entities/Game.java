@@ -1,15 +1,13 @@
 package com.akamych.buzzers.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -18,24 +16,27 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "users")
-public class User {
+@Table(name = "games")
+public class Game {
+
     @Id
     @UuidGenerator
     private UUID id;
 
-    private String teamName;
+    @Column(unique = true)
+    private Long gameId;
 
-    private String role;
+    @OneToOne(mappedBy = "game")
+    private User host;
 
-    private String jwtToken;
+    @OneToMany
+    private List<User> players;
 
-    @OneToOne
-    private Game game;
+    private boolean isActive;
 
     @CreationTimestamp
     private ZonedDateTime createdAt;
+
     @UpdateTimestamp
     private ZonedDateTime updatedAt;
-
 }
