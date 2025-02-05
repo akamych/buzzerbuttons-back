@@ -9,6 +9,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -27,14 +29,23 @@ public class UserService {
 
         userRepository.saveAndFlush(user);
 
-        user.setJwtToken(jwtService.generateToken(user));
-        userRepository.saveAndFlush(user);
-
         jwtService.setJwtCookie(user, response);
 
         return AuthResponse.builder()
                 .host(true)
                 .game(newGame.getGameId())
+                .build();
+    }
+
+    public AuthResponse checkAuth(User user) {
+
+        if (user == null) {
+            return null;
+        }
+
+        return AuthResponse.builder()
+                .host(user.getRole().equals(UserRolesEnum.HOST.getRole()))
+                .game(user.getGame().getGameId())
                 .build();
     }
 }

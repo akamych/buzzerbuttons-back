@@ -1,5 +1,4 @@
 spring:
-
   application:
     name: Buzzer Buttons
   datasource:
@@ -8,13 +7,18 @@ spring:
     password: ${BUZZERS_DB_PASS}
   jpa:
     hibernate:
-      ddl-auto: create-drop
-      database-platform: org.hibernate.dialect.PostgreSQLDialect
+      ddl-auto: update
+  websocket:
+    enabled: true
 
 jwt:
   expiration: 600000
   refresh-expiration: 86400000
 
+#logging:
+#  level:
+#    org.springframework.web.socket: DEBUG
+#    org.springframework.messaging: DEBUG
 
 server:
   port: ${BUZZERS_PORT}

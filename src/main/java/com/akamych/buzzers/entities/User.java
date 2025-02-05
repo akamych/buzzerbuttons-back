@@ -8,8 +8,14 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -19,7 +25,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @Table(name = "users", schema = "public")
-public class User {
+public class User implements UserDetails {
     @Id
     @UuidGenerator
     private UUID id;
@@ -27,8 +33,6 @@ public class User {
     private String teamName;
 
     private String role;
-
-    private String jwtToken;
 
     @OneToOne
     private Game game;
@@ -38,4 +42,20 @@ public class User {
     @UpdateTimestamp
     private ZonedDateTime updatedAt;
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<SimpleGrantedAuthority> roles = new ArrayList<>();
+        roles.add(new SimpleGrantedAuthority(this.getRole()));
+        return roles;
+    }
+
+    @Override
+    public String getPassword() {
+        return null;
+    }
+
+    @Override
+    public String getUsername() {
+        return null;
+    }
 }
