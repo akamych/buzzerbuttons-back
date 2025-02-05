@@ -25,4 +25,9 @@ public class AuthController {
     public AuthResponse hostGame(HttpServletResponse response) {
         return userService.hostGame(response);
     }
+
+    @GetMapping("/logout")
+    public boolean logout(HttpServletResponse response, @AuthenticationPrincipal User user) {
+        return userService.logout(response, user);
+    }
 }

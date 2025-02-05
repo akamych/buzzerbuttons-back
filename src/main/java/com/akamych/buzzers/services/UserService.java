@@ -8,6 +8,7 @@ import com.akamych.buzzers.repositories.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -47,5 +48,18 @@ public class UserService {
                 .host(user.getRole().equals(UserRolesEnum.HOST.getRole()))
                 .game(user.getGame().getGameId())
                 .build();
+    }
+
+    @Transactional
+    public boolean logout(HttpServletResponse response, User user) {
+
+        if (user == null) {
+            return false;
+        }
+
+        userRepository.deleteById(user.getId());
+        jwtService.deleteJwtCookie(response);
+
+        return true;
     }
 }
