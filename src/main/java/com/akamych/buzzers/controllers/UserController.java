@@ -1,19 +1,18 @@
 package com.akamych.buzzers.controllers;
 
-import com.akamych.buzzers.dtos.responses.AuthResponse;
+import com.akamych.buzzers.dtos.AuthResponse;
+import com.akamych.buzzers.dtos.JoinGameRequest;
 import com.akamych.buzzers.entities.User;
 import com.akamych.buzzers.services.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping()
 @RequiredArgsConstructor
-public class AuthController {
+public class UserController {
     private final UserService userService ;
 
     @GetMapping("/auth")
@@ -29,6 +28,11 @@ public class AuthController {
     @GetMapping("/play")
     public AuthResponse createPlayer(HttpServletResponse response) {
         return userService.createPlayer(response);
+    }
+
+    @PostMapping("/join")
+    public boolean joinGame(@RequestBody JoinGameRequest request, @AuthenticationPrincipal User user) {
+        return userService.joinGame(request, user);
     }
 
     @GetMapping("/log-out")

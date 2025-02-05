@@ -45,8 +45,6 @@ public class SecurityConfig {
                         .requestMatchers("/auth").permitAll()
                         .requestMatchers("/host").permitAll()
                         .requestMatchers("/play").permitAll()
-                        .requestMatchers("/logout").authenticated()
-                        .requestMatchers("/ws/**").authenticated()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 

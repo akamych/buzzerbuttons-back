@@ -1,4 +1,4 @@
-package com.akamych.buzzers.dtos.responses;
+package com.akamych.buzzers.dtos;
 
 import lombok.Builder;
 

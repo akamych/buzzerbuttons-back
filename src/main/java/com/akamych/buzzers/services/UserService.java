@@ -1,20 +1,27 @@
 package com.akamych.buzzers.services;
 
-import com.akamych.buzzers.dtos.responses.AuthResponse;
+import com.akamych.buzzers.dtos.AuthResponse;
+import com.akamych.buzzers.dtos.JoinGameRequest;
 import com.akamych.buzzers.entities.Game;
 import com.akamych.buzzers.entities.User;
 import com.akamych.buzzers.enums.UserRolesEnum;
+import com.akamych.buzzers.repositories.GameRepository;
 import com.akamych.buzzers.repositories.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final GameRepository gameRepository;
     private final GameService gameService;
     private final JwtService jwtService;
 
@@ -69,6 +76,24 @@ public class UserService {
                 .host(false)
                 .game(user.getPlayingGame() == null ? null : user.getPlayingGame().getGameId())
                 .build();
+    }
+
+    @Transactional
+    public boolean joinGame(JoinGameRequest request, User user) {
+
+        Game game = gameService.getById(request.game());
+        if (game == null) {
+            return false;
+        }
+
+        user.setPlayingGame(game);
+        user.setTeamName(request.name());
+        userRepository.saveAndFlush(user);
+
+        game.getPlayers().add(user);
+        gameRepository.saveAndFlush(game);
+
+        return true;
     }
 
     @Transactional

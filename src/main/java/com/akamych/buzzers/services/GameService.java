@@ -39,4 +39,8 @@ public class GameService {
         return newGame;
 
     }
+
+    public Game getById(Long id) {
+        return gameRepository.findByGameId(id).orElse(null);
+    }
 }
