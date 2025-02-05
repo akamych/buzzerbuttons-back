@@ -26,7 +26,7 @@ public class Game {
     @Column(unique = true)
     private Long gameId;
 
-    @OneToOne(mappedBy = "game")
+    @OneToOne(mappedBy = "hostingGame")
     private User host;
 
     @OneToMany

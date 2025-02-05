@@ -1,9 +1,6 @@
 package com.akamych.buzzers.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -34,8 +31,11 @@ public class User implements UserDetails {
 
     private String role;
 
-    @OneToOne
-    private Game game;
+    @OneToOne(orphanRemoval = true)
+    private Game hostingGame;
+
+    @ManyToOne
+    private Game playingGame;
 
     @CreationTimestamp
     private ZonedDateTime createdAt;

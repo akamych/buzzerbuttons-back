@@ -22,11 +22,16 @@ public class AuthController {
     }
 
     @GetMapping("/host")
-    public AuthResponse hostGame(HttpServletResponse response) {
-        return userService.hostGame(response);
+    public AuthResponse createHost(HttpServletResponse response) {
+        return userService.createHost(response);
     }
 
-    @GetMapping("/logout")
+    @GetMapping("/play")
+    public AuthResponse createPlayer(HttpServletResponse response) {
+        return userService.createPlayer(response);
+    }
+
+    @GetMapping("/log-out")
     public boolean logout(HttpServletResponse response, @AuthenticationPrincipal User user) {
         return userService.logout(response, user);
     }

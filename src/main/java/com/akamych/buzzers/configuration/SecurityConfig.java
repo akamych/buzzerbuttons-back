@@ -1,6 +1,7 @@
 package com.akamych.buzzers.configuration;
 
 import com.akamych.buzzers.enums.UserRolesEnum;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -43,9 +44,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth").permitAll()
                         .requestMatchers("/host").permitAll()
-                        .requestMatchers("/ws").permitAll()
-                        .requestMatchers("/ws/").permitAll()
-                        .requestMatchers("/ws/**").permitAll()
+                        .requestMatchers("/play").permitAll()
+                        .requestMatchers("/logout").authenticated()
+                        .requestMatchers("/ws/**").authenticated()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
