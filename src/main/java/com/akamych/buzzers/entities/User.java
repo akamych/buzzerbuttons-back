@@ -34,7 +34,8 @@ public class User implements UserDetails {
     @OneToOne(orphanRemoval = true)
     private Game hostingGame;
 
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE})
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "playing_game_id")
     private Game playingGame;
 
     @CreationTimestamp

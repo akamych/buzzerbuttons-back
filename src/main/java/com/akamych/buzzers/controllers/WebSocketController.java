@@ -24,7 +24,13 @@ public class WebSocketController {
     @MessageMapping("/game/{gameId}/player-quits")
     @SendTo("/topic/game/{gameId}/player-quits")
     public String removePlayer(@RequestBody String playerName) {
-        System.out.println("player quits!");
         return playerName;
+    }
+
+    @MessageMapping("/game/{gameId}/activate")
+    @SendTo("/topic/game/{gameId}/activate")
+    public String activateGame(@DestinationVariable long gameId) {
+        // TODO: set start time
+        return "1";
     }
 }

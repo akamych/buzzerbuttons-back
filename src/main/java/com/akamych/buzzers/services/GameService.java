@@ -51,6 +51,6 @@ public class GameService {
         Game game = user.getPlayingGame();
         List<User> players = game.getPlayers();
         game.setPlayers(players.stream().filter(iterate -> !iterate.equals(user)).collect(Collectors.toList()));
-        gameRepository.save(game);
+        gameRepository.saveAndFlush(game);
     }
 }
