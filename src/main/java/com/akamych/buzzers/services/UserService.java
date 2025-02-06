@@ -9,13 +9,9 @@ import com.akamych.buzzers.repositories.GameRepository;
 import com.akamych.buzzers.repositories.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -87,7 +83,7 @@ public class UserService {
         }
 
         user.setPlayingGame(game);
-        user.setTeamName(request.name());
+        user.setPlayerName(request.name());
         userRepository.saveAndFlush(user);
 
         game.getPlayers().add(user);
@@ -96,15 +92,18 @@ public class UserService {
         return true;
     }
 
-    @Transactional
     public boolean logout(HttpServletResponse response, User user) {
 
         if (user == null) {
             return false;
         }
 
+        if (user.getPlayingGame() != null) {
+            gameService.removePlayer(user);
+        }
+
+        userRepository.delete(user);
         SecurityContextHolder.clearContext();
-        userRepository.deleteById(user.getId());
         jwtService.deleteJwtCookie(response);
 
         return true;

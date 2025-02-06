@@ -29,7 +29,7 @@ public class Game {
     @OneToOne(mappedBy = "hostingGame")
     private User host;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<User> players;
 
     private boolean isActive;

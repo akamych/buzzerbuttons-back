@@ -27,14 +27,14 @@ public class User implements UserDetails {
     @UuidGenerator
     private UUID id;
 
-    private String teamName;
+    private String playerName;
 
     private String role;
 
     @OneToOne(orphanRemoval = true)
     private Game hostingGame;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE})
     private Game playingGame;
 
     @CreationTimestamp

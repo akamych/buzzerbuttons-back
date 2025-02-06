@@ -35,6 +35,11 @@ public class UserController {
         return userService.joinGame(request, user);
     }
 
+    @GetMapping("/get-name")
+    public String getPlayerName(@AuthenticationPrincipal User user) {
+        return user == null ? null : user.getPlayerName();
+    }
+
     @GetMapping("/log-out")
     public boolean logout(HttpServletResponse response, @AuthenticationPrincipal User user) {
         return userService.logout(response, user);
