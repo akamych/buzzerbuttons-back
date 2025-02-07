@@ -22,13 +22,13 @@ public class UserController {
     }
 
     @GetMapping("/host")
-    public AuthResponse createHost(HttpServletResponse response) {
-        return userService.createHost(response);
+    public AuthResponse createHost(HttpServletResponse response, @AuthenticationPrincipal User user) {
+        return userService.createHost(response, user);
     }
 
     @GetMapping("/play")
-    public AuthResponse createPlayer(HttpServletResponse response) {
-        return userService.createPlayer(response);
+    public AuthResponse createPlayer(HttpServletResponse response, @AuthenticationPrincipal User user) {
+        return userService.createPlayer(response, user);
     }
 
     @PostMapping("/join")

@@ -27,18 +27,26 @@ public class UserService {
     private final JwtService jwtService;
 
     @Transactional
-    public AuthResponse createHost(HttpServletResponse response) {
+    public AuthResponse createHost(HttpServletResponse response, User user) {
+
+        if (user != null && user.getHostingGame() != null) {
+            gameService.deleteGame(user.getHostingGame());
+        }
+
+        if (user != null) {
+            userRepository.delete(user);
+        }
 
         Game newGame = gameService.createGame();
 
-        User user = User.builder()
+        User newUser = User.builder()
                 .role(UserRolesEnum.HOST.getRole())
                 .hostingGame(newGame)
                 .build();
 
-        userRepository.saveAndFlush(user);
+        userRepository.saveAndFlush(newUser);
 
-        jwtService.setJwtCookie(user, response);
+        jwtService.setJwtCookie(newUser, response);
 
         return AuthResponse.builder()
                 .host(true)
@@ -47,14 +55,30 @@ public class UserService {
     }
 
     @Transactional
-    public AuthResponse createPlayer(HttpServletResponse response) {
+    public AuthResponse createPlayer(HttpServletResponse response, User user) {
 
-        User user = User.builder()
+        if (user != null) {
+            if (user.getHostingGame() != null) {
+                return AuthResponse.builder()
+                        .game(user.getHostingGame().getGameId())
+                        .host(true)
+                        .build();
+            }
+
+            if (user.getPlayingGame() != null) {
+                return AuthResponse.builder()
+                        .game(user.getPlayingGame().getGameId())
+                        .host(false)
+                        .build();
+            }
+        }
+
+        User newUser = User.builder()
                 .role(UserRolesEnum.PLAYER.getRole())
                 .build();
 
-        userRepository.saveAndFlush(user);
-        jwtService.setJwtCookie(user, response);
+        userRepository.saveAndFlush(newUser);
+        jwtService.setJwtCookie(newUser, response);
 
         return AuthResponse.builder()
                 .host(false)
@@ -109,6 +133,10 @@ public class UserService {
             gameService.removePlayer(user);
         }
 
+        if (user.getHostingGame() != null) {
+            gameService.deleteGame(user.getHostingGame());
+        }
+
         userRepository.delete(user);
         SecurityContextHolder.clearContext();
         jwtService.deleteJwtCookie(response);
@@ -120,10 +148,13 @@ public class UserService {
     @Transactional
     public GameInfoResponse getGameInfo(User user) {
         if (user == null || (user.getHostingGame() == null && user.getPlayingGame() == null)) {
-            return null;
+            return GameInfoResponse.builder().isDeleted(true).build();
         }
 
         if (user.getPlayingGame() != null) {
+            if (user.getPlayingGame().isDeleted()) {
+                return GameInfoResponse.builder().isDeleted(true).build();
+            }
             return gameService.getGameShortInfo(user.getPlayingGame(), user);
         }
 

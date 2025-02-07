@@ -130,13 +130,30 @@ public class GameService {
                 .players(game.getPlayers() == null
                         ? new ArrayList<>()
                         : game.getPlayers().stream()
-                            .map(User::getPlayerName)
-                            .collect(Collectors.toList()))
+                        .map(User::getPlayerName)
+                        .collect(Collectors.toList()))
                 .results(game.getResults())
                 .isActive(game.isActive())
                 .build();
 
     }
+
+    @Transactional
+    public boolean checkGameStatus(long gameId) {
+        Optional<Game> optionalGame = gameRepository.findByGameId(gameId);
+        if (optionalGame.isEmpty()) {
+            return false;
+        }
+        return !optionalGame.get().isDeleted();
+    }
+
+    @Transactional
+    public void deleteGame(Game game) {
+        game.setDeleted(true);
+        gameRepository.saveAndFlush(game);
+        gameRepository.delete(game);
+    }
+
 
     @Transactional
     public GameInfoResponse getGameShortInfo(Game game, User user) {

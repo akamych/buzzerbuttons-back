@@ -36,9 +36,8 @@ public class Game {
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private Map<String, String> results = new HashMap<>();
-
     private boolean isActive;
-
+    private boolean isDeleted;
     @CreationTimestamp
     private ZonedDateTime createdAt;
     @UpdateTimestamp

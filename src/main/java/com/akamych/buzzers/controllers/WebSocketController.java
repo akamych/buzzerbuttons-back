@@ -55,4 +55,10 @@ public class WebSocketController {
         return gameService.savePressResult(gameId, request);
     }
 
+    @MessageMapping("/game/{gameId}/game-status")
+    @SendTo("/topic/game/{gameId}/game-status")
+    public boolean checkGameStatus(@DestinationVariable long gameId) {
+        return gameService.checkGameStatus(gameId);
+    }
+
 }
