@@ -4,7 +4,7 @@ spring:
   datasource:
     url: ${BUZZERS_DB_HOST}/${BUZZERS_DB_DB}
     username: ${BUZZERS_DB_USER}
-    password: ${BUZZERS_DB_PASS}
+    password: ${BUZZERS_DB_PWD}
   jpa:
     hibernate:
       ddl-auto: update
@@ -21,4 +21,4 @@ jwt:
 #    org.springframework.messaging: DEBUG
 
 server:
-  port: ${BUZZERS_PORT}
+  port: ${BUZZERS_SERVER_PORT}
