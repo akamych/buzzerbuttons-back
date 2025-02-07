@@ -1,0 +1,10 @@
+FROM openjdk:21-jdk-slim
+
+ARG BUZZERS_JAR_NAME
+ARG BUZZERS_APP_DIR
+
+WORKDIR ${BUZZERS_APP_DIR}
+EXPOSE ${BUZZERS_SERVER_PORT}
+
+COPY target/${BUZZERS_JAR_NAME}.jar ${BUZZERS_APP_DIR}/buzzers-app.jar
+ENTRYPOINT ["java", "-jar", "buzzers-app.jar"]

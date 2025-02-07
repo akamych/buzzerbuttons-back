@@ -2,7 +2,7 @@ spring:
   application:
     name: Buzzer Buttons
   datasource:
-    url: jdbc:postgresql://localhost:5432/${BUZZERS_DB_DB}
+    url: ${BUZZERS_DB_HOST}/${BUZZERS_DB_DB}
     username: ${BUZZERS_DB_USER}
     password: ${BUZZERS_DB_PASS}
   jpa:

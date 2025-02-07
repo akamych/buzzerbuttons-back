@@ -1,0 +1,50 @@
+networks:
+  buzzers-back:
+    driver: bridge
+
+services:
+  buzzers:
+    image: 'buzzers:latest'
+    restart: always
+    container_name: buzzers-container
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - BUZZERS_SERVER_PORT=${BUZZERS_SERVER_PORT}
+        - BUZZERS_JAR_NAME=${BUZZERS_JAR_NAME}
+        - BUZZERS_APP_DIR=${BUZZERS_APP_DIR}
+    ports:
+      - "${BUZZERS_SERVER_PORT}:${BUZZERS_SERVER_PORT}"
+    environment:
+      BUZZERS_DB_HOST: ${BUZZERS_DB_HOST}
+      BUZZERS_DB_DB: ${BUZZERS_DB_DB}
+      BUZZERS_DB_USER: ${BUZZERS_DB_USER}
+      BUZZERS_DB_PWD: ${BUZZERS_DB_PWD}
+      BUZZERS_DB_DRIVER: ${BUZZERS_DB_DRIVER}
+      BUZZERS_SERVER_PORT: ${BUZZERS_SERVER_PORT}
+      BUZZERS_JWT_SECRET: ${BUZZERS_JWT_SECRET}
+
+    networks:
+      - buzzers-back
+    depends_on:
+      - buzzers-db
+
+  buzzers-db:
+    image: postgres:13-alpine
+    container_name: buzzers-db
+    environment:
+      POSTGRES_DB: ${BUZZERS_DB_DB}
+      POSTGRES_USER:  ${BUZZERS_DB_USER}
+      POSTGRES_PASSWORD: ${BUZZERS_DB_PWD}
+      PGPORT: ${BUZZERS_DB_PORT}
+    restart: always
+    ports:
+      - "${BUZZERS_DB_PORT}:${BUZZERS_DB_PORT}"
+    networks:
+      - buzzers-back
+    volumes:
+      - db_data:${BUZZERS_DB_DATA}
+
+volumes:
+  db_data:
