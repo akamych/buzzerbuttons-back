@@ -11,7 +11,8 @@
 	<groupId>com.akamych</groupId>
 	<artifactId>buzzers</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Buzzer Buttons</name>
+	<name>buzzers-app</name>
+	<packaging>jar</packaging>
 	<description>Online buzzer buttons at buzzers.akamych.com</description>
 	<url/>
 	<licenses>
