@@ -1,6 +1,7 @@
 package com.akamych.buzzers.controllers;
 
 import com.akamych.buzzers.dtos.AuthResponse;
+import com.akamych.buzzers.dtos.GameInfoResponse;
 import com.akamych.buzzers.dtos.JoinGameRequest;
 import com.akamych.buzzers.entities.User;
 import com.akamych.buzzers.services.UserService;
@@ -43,5 +44,10 @@ public class UserController {
     @GetMapping("/log-out")
     public boolean logout(HttpServletResponse response, @AuthenticationPrincipal User user) {
         return userService.logout(response, user);
+    }
+
+    @GetMapping("/game-info")
+    public GameInfoResponse getGameInfo(@AuthenticationPrincipal User user) {
+        return userService.getGameInfo(user);
     }
 }

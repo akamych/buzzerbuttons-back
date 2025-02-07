@@ -1,6 +1,7 @@
 package com.akamych.buzzers.services;
 
 import com.akamych.buzzers.dtos.AuthResponse;
+import com.akamych.buzzers.dtos.GameInfoResponse;
 import com.akamych.buzzers.dtos.JoinGameRequest;
 import com.akamych.buzzers.entities.Game;
 import com.akamych.buzzers.entities.User;
@@ -13,6 +14,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -21,6 +26,7 @@ public class UserService {
     private final GameService gameService;
     private final JwtService jwtService;
 
+    @Transactional
     public AuthResponse createHost(HttpServletResponse response) {
 
         Game newGame = gameService.createGame();
@@ -40,6 +46,7 @@ public class UserService {
                 .build();
     }
 
+    @Transactional
     public AuthResponse createPlayer(HttpServletResponse response) {
 
         User user = User.builder()
@@ -107,5 +114,19 @@ public class UserService {
         jwtService.deleteJwtCookie(response);
 
         return true;
+    }
+
+
+    @Transactional
+    public GameInfoResponse getGameInfo(User user) {
+        if (user == null || (user.getHostingGame() == null && user.getPlayingGame() == null)) {
+            return null;
+        }
+
+        if (user.getPlayingGame() != null) {
+            return gameService.getGameShortInfo(user.getPlayingGame(), user);
+        }
+
+        return gameService.getGameInfo(user.getHostingGame());
     }
 }

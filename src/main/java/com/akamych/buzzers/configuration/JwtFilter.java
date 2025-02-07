@@ -78,6 +78,7 @@ public class JwtFilter extends OncePerRequestFilter {
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(user, null, null);
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            jwtService.setJwtCookie(user, response);
         }, () -> {
             jwtService.deleteJwtCookie(response);
         });

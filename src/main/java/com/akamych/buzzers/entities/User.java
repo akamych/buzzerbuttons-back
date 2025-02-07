@@ -31,7 +31,7 @@ public class User implements UserDetails {
 
     private String role;
 
-    @OneToOne(orphanRemoval = true)
+    @OneToOne(orphanRemoval = true, cascade = CascadeType.PERSIST)
     private Game hostingGame;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
