@@ -26,10 +26,10 @@ public class Game {
     @Column(unique = true)
     private Long gameId;
 
-    @OneToOne(mappedBy = "hostingGame", cascade = CascadeType.PERSIST)
+    @OneToOne(mappedBy = "hostingGame", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private User host;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "playingGame", orphanRemoval = true, fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
     @Builder.Default
     private List<User> players = new ArrayList<>();
 

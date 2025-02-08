@@ -10,10 +10,12 @@ import com.akamych.buzzers.repositories.GameRepository;
 import com.akamych.buzzers.repositories.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -159,5 +161,25 @@ public class UserService {
         }
 
         return gameService.getGameInfo(user.getHostingGame());
+    }
+
+
+    @Scheduled(fixedRate = 300000)
+    @Transactional
+    public void scheduledDeletion() {
+
+        try {
+            userRepository.deleteAllByHostingGameIsNullAndPlayingGameIsNull();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            ZonedDateTime twoHoursAgo = ZonedDateTime.now().minusHours(2);
+            userRepository.deleteAllByUpdatedAtBefore(twoHoursAgo);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }

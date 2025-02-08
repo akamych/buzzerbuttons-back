@@ -31,11 +31,10 @@ public class User implements UserDetails {
 
     private String role;
 
-    @OneToOne(orphanRemoval = true, cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Game hostingGame;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "playing_game_id")
+    @ManyToOne(cascade = {CascadeType.PERSIST})
     private Game playingGame;
 
     @CreationTimestamp

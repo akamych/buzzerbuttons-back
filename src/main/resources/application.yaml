@@ -2,12 +2,13 @@ spring:
   application:
     name: Buzzer Buttons
   datasource:
-    url: ${BUZZERS_DB_HOST}/${BUZZERS_DB_DB}
+    url: ${BUZZERS_DB_HOST}${BUZZERS_DB_DB}
     username: ${BUZZERS_DB_USER}
     password: ${BUZZERS_DB_PWD}
   jpa:
     hibernate:
       ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
   websocket:
     enabled: true
 

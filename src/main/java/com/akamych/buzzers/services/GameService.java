@@ -6,6 +6,8 @@ import com.akamych.buzzers.entities.Game;
 import com.akamych.buzzers.entities.User;
 import com.akamych.buzzers.repositories.GameRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -171,5 +173,31 @@ public class GameService {
                 .build();
 
     }
+
+    @Scheduled(fixedRate = 300000)
+    @Transactional
+    public void scheduledDeletion() {
+
+        try {
+            gameRepository.deleteAllByIsDeletedTrue();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            gameRepository.deleteAllByHostIsNull();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            ZonedDateTime twoHoursAgo = ZonedDateTime.now().minusHours(2);
+            gameRepository.deleteAllByUpdatedAtBefore(twoHoursAgo);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
 }
