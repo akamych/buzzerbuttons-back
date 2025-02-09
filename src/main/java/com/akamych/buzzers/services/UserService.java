@@ -112,7 +112,7 @@ public class UserService {
     public boolean joinGame(JoinGameRequest request, User user) {
 
         Game game = gameService.getById(request.game());
-        if (game == null) {
+        if (game == null || game.isDeleted()) {
             return false;
         }
 
@@ -140,7 +140,7 @@ public class UserService {
     public boolean logout(HttpServletResponse response, User user) {
 
         if (user == null) {
-            return false;
+            return true;
         }
 
         if (user.getPlayingGame() != null) {
