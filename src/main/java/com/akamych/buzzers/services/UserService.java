@@ -31,11 +31,12 @@ public class UserService {
     @Transactional
     public AuthResponse createHost(HttpServletResponse response, User user) {
 
-        if (user != null && user.getHostingGame() != null) {
-            gameService.deleteGame(user.getHostingGame());
-        }
-
         if (user != null) {
+            if (user.getHostingGame() != null) {
+                gameService.deleteGame(user.getHostingGame());
+            } else if (user.getPlayingGame() != null) {
+                gameService.removePlayer(user);
+            }
             userRepository.delete(user);
         }
 
@@ -123,6 +124,17 @@ public class UserService {
         gameRepository.saveAndFlush(game);
 
         return true;
+    }
+
+    private void deleteCurrentUser(User user) {
+
+        if (user.getHostingGame() != null) {
+            gameService.deleteGame(user.getHostingGame());
+        }
+
+        if (user != null) {
+            userRepository.delete(user);
+        }
     }
 
     public boolean logout(HttpServletResponse response, User user) {

@@ -1,6 +1,7 @@
 package com.akamych.buzzers.services;
 
 import com.akamych.buzzers.dtos.GameInfoResponse;
+import com.akamych.buzzers.dtos.GameStatusResponse;
 import com.akamych.buzzers.dtos.PressRequest;
 import com.akamych.buzzers.entities.Game;
 import com.akamych.buzzers.entities.User;
@@ -14,12 +15,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class GameService {
     private final GameRepository gameRepository;
+    private final ReentrantLock gameResultsLock = new ReentrantLock();
 
     private Long generateId() {
         return ThreadLocalRandom.current().nextLong(100_000_000L, 1_000_000_000L);
@@ -89,6 +92,7 @@ public class GameService {
         game.setActive(false);
         game.setNextRoundAt(ZonedDateTime.parse(nextRoundAt));
         game.setResults(new HashMap<>());
+        game.setWinnerName(null);
         gameRepository.saveAndFlush(game);
 
         return true;
@@ -102,26 +106,37 @@ public class GameService {
             return null;
         }
 
-        Game game = optionalGame.get();
-        if (!game.isActive()) {
-            return null;
-        }
+        gameResultsLock.lock();
 
-        Map<String, String> results = game.getResults();
+        try {
 
-        if (results != null && results.containsKey(request.playerName())) {
+            Game game = optionalGame.get();
+            if (!game.isActive()) {
+                return null;
+            }
+
+            Map<String, String> results = game.getResults();
+
+            if (results != null && results.containsKey(request.playerName())) {
+                return results;
+            }
+
+            if (results == null) {
+                results = new HashMap<>();
+            }
+
+            results.put(request.playerName(), ZonedDateTime.parse(request.pressedAt()).toString());
+            game.setResults(results);
+
+            if (results.size() == 1) {
+                game.setWinnerName(request.playerName());
+            }
+            gameRepository.saveAndFlush(game);
+
             return results;
+        } finally {
+            gameResultsLock.unlock();
         }
-
-        if (results == null) {
-            results = new HashMap<>();
-        }
-
-        results.put(request.playerName(), ZonedDateTime.parse(request.pressedAt()).toString());
-        game.setResults(results);
-        gameRepository.saveAndFlush(game);
-
-        return results;
     }
 
     @Transactional
@@ -141,12 +156,16 @@ public class GameService {
     }
 
     @Transactional
-    public boolean checkGameStatus(long gameId) {
+    public GameStatusResponse checkGameStatus(long gameId) {
         Optional<Game> optionalGame = gameRepository.findByGameId(gameId);
         if (optionalGame.isEmpty()) {
-            return false;
+            return GameStatusResponse.getDeletedGameResponse();
         }
-        return !optionalGame.get().isDeleted();
+
+        return GameStatusResponse.builder()
+                .isFinished(optionalGame.get().isDeleted())
+                .winner(optionalGame.get().getWinnerName())
+                .build();
     }
 
     @Transactional

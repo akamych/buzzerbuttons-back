@@ -29,6 +29,8 @@ public class Game {
     @OneToOne(mappedBy = "hostingGame", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private User host;
 
+    private String winnerName;
+
     @OneToMany(mappedBy = "playingGame", orphanRemoval = true, fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
     @Builder.Default
     private List<User> players = new ArrayList<>();

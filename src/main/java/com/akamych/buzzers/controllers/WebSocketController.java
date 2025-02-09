@@ -1,6 +1,7 @@
 package com.akamych.buzzers.controllers;
 
 import com.akamych.buzzers.dtos.GameInfoResponse;
+import com.akamych.buzzers.dtos.GameStatusResponse;
 import com.akamych.buzzers.dtos.PressRequest;
 import com.akamych.buzzers.entities.User;
 import com.akamych.buzzers.services.GameService;
@@ -57,7 +58,7 @@ public class WebSocketController {
 
     @MessageMapping("/game/{gameId}/game-status")
     @SendTo("/topic/game/{gameId}/game-status")
-    public boolean checkGameStatus(@DestinationVariable long gameId) {
+    public GameStatusResponse checkGameStatus(@DestinationVariable long gameId) {
         return gameService.checkGameStatus(gameId);
     }
 
