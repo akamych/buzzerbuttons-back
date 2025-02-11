@@ -1,6 +1,8 @@
 spring:
   application:
     name: Buzzer Buttons
+  profiles:
+    active: ${BUZZERS_PROFILE}
   datasource:
     url: ${BUZZERS_DB_HOST}${BUZZERS_DB_DB}
     username: ${BUZZERS_DB_USER}
@@ -11,12 +13,9 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   websocket:
     enabled: true
-  profiles:
-    active: ${BUZZERS_PROFILE}
 
 jwt:
   expiration: 1800000
-  refresh-expiration: 86400000
 
 #logging:
 #  level:
