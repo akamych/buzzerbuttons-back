@@ -20,7 +20,7 @@ import java.util.List;
 public class SecurityConfig {
     private final JwtFilter jwtFilter;
 
-    @Value("${spring.profiles.active:default}")
+    @Value("${spring.profiles.active}")
     private String activeProfile;
 
     public SecurityConfig(JwtFilter jwtFilter) {
