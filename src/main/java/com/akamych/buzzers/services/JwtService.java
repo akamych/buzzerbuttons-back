@@ -16,17 +16,17 @@ import java.util.Date;
 @Service
 public class JwtService {
 
-        @Value("${BUZZERS_JWT_SEC}")
-        private String secret;
+        @Value("${spring.profiles.active:default}")
+        private String activeProfile;
 
         @Value("${jwt.expiration}")
         private long expiration;
 
+        @Value("${BUZZERS_JWT_SEC}")
+        private String secret;
+
         @Value("${BUZZERS_COOKIE_NAME}")
         private String JWT_TOKEN_COOKIE_NAME;
-
-        @Value("${spring.profiles.active:default}")
-        private String activeProfile;
 
 
     private Key getSigningKey() {
