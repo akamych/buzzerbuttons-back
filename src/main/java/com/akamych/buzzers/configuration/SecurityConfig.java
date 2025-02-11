@@ -46,6 +46,7 @@ public class SecurityConfig {
                                     "https://localhost",
                                     "http://localhost:8100",
                                     "http://localhost",
+                                    "http://*:8100",
                                     "http://10.0.2.2:*",
                                     "http://192.168.*.*:*",
                                     "capacitor://*"

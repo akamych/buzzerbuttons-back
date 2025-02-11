@@ -29,6 +29,7 @@ public class WebSocketConfigProd implements WebSocketMessageBrokerConfigurer {
                         "http://10.0.2.2:*",
                         "http://192.168.*.*:*",
                         "capacitor://*",
+                        "http://*:8100",
                         "http://localhost:8100",
                         "https://localhost:8100",
                         "https://localhost"
