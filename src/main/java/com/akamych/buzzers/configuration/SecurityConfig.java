@@ -38,11 +38,17 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.ignoringRequestMatchers("/ws/**").disable())
                 .cors(cors -> cors.configurationSource(request -> {
                     var corsConfiguration = new CorsConfiguration();
-                    corsConfiguration.setAllowedOriginPatterns(List.of(
+                    corsConfiguration.setAllowedOriginPatterns(
                             activeProfile.equalsIgnoreCase("prod")
-                                    ? "https://buzzers.akamych.com"
-                                    : "*")
+                                    ? List.of(
+                                        "https://buzzers.akamych.com",
+                                        "http://10.0.2.2:*",
+                                        "http://192.168.*.*:*",
+                                        "capacitor://*"
+                                    )
+                                    : List.of("http://localhost:*" )
                     );
+
                     corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     corsConfiguration.setAllowedHeaders(List.of("*"));
                     corsConfiguration.setAllowCredentials(true);
