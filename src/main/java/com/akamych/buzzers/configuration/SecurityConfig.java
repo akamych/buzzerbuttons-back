@@ -42,6 +42,7 @@ public class SecurityConfig {
                             activeProfile.equalsIgnoreCase("prod")
                                     ? List.of(
                                         "https://buzzers.akamych.com",
+                                        "http://localhost:8100",
                                         "http://10.0.2.2:*",
                                         "http://192.168.*.*:*",
                                         "capacitor://*"
