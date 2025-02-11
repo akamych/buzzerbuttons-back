@@ -25,8 +25,8 @@ public class JwtService {
         @Value("${BUZZERS_COOKIE_NAME}")
         private String JWT_TOKEN_COOKIE_NAME;
 
-    @Value("${spring.profiles.active:default}")
-    private String activeProfile;
+        @Value("${spring.profiles.active:default}")
+        private String activeProfile;
 
 
     private Key getSigningKey() {

@@ -2,6 +2,7 @@ package com.akamych.buzzers.configuration;
 
 import com.akamych.buzzers.enums.UserRolesEnum;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,6 +20,9 @@ import java.util.List;
 public class SecurityConfig {
     private final JwtFilter jwtFilter;
 
+    @Value("${spring.profiles.active:default}")
+    private String activeProfile;
+
     public SecurityConfig(JwtFilter jwtFilter) {
         this.jwtFilter = jwtFilter;
     }
@@ -34,7 +38,11 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.ignoringRequestMatchers("/ws/**").disable())
                 .cors(cors -> cors.configurationSource(request -> {
                     var corsConfiguration = new CorsConfiguration();
-                    corsConfiguration.setAllowedOriginPatterns(List.of("*"));
+                    corsConfiguration.setAllowedOriginPatterns(List.of(
+                            activeProfile.equalsIgnoreCase("prod")
+                                    ? "https://buzzers.akamych.com"
+                                    : "*")
+                    );
                     corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     corsConfiguration.setAllowedHeaders(List.of("*"));
                     corsConfiguration.setAllowCredentials(true);
