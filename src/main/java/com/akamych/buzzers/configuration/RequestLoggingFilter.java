@@ -2,30 +2,22 @@ package com.akamych.buzzers.configuration;
 
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-@WebFilter("/*")
-public class RequestLoggingFilter implements Filter {
-
-    private static final Logger logger = LoggerFactory.getLogger(RequestLoggingFilter.class);
+@Component
+public class RequestLoggingFilter extends OncePerRequestFilter {
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
-        logger.info("Request received: {} {}", request.getRemoteAddr(), request.getLocalName());
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+            throws ServletException, IOException {
+        System.out.println("Request received: {" + request.getRemoteAddr() + "} {" + request.getLocalName() + "}");
         chain.doFilter(request, response);  // Proceed with the next filter or request handler
-    }
-
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-        // Initialization logic, if needed
-    }
-
-    @Override
-    public void destroy() {
-        // Cleanup logic, if needed
     }
 }
