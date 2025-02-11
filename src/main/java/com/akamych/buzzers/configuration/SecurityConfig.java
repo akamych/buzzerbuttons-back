@@ -40,15 +40,12 @@ public class SecurityConfig {
                     var corsConfiguration = new CorsConfiguration();
                     corsConfiguration.setAllowedOriginPatterns(
                             activeProfile.equalsIgnoreCase("prod")
-                                    ? List.of(
-                                        "https://buzzers.akamych.com",
-                                        "http://localhost:8100",
-                                        "http://*:8100",
-                                        "http://10.0.2.2:*",
-                                        "http://192.168.*.*:*",
-                                        "capacitor://*"
-                                    )
-                                    : List.of("http://localhost:*" )
+                                ? List.of(
+                                    "https://buzzers.akamych.com",
+                                    "https://localhost:8100",
+                                    "https://localhost"
+                                )
+                                : List.of("http://localhost:*" )
                     );
 
                     corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
