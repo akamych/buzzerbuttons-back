@@ -19,7 +19,7 @@ import org.springframework.web.socket.server.support.HttpSessionHandshakeInterce
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-    @Value("${BUZZERS_PROFILE}")
+    @Value("${spring.profiles.active}")
     private String activeProfile;
 
     @Override

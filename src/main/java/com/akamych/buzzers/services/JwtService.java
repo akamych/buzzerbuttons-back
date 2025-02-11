@@ -16,7 +16,7 @@ import java.util.Date;
 @Service
 public class JwtService {
 
-        @Value("${BUZZERS_PROFILE}")
+        @Value("${spring.profiles.active}")
         private String activeProfile;
 
         @Value("${jwt.expiration}")
