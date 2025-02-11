@@ -43,7 +43,12 @@ public class SecurityConfig {
                                 ? List.of(
                                     "https://buzzers.akamych.com",
                                     "https://localhost:8100",
-                                    "https://localhost"
+                                    "https://localhost",
+                                    "http://localhost:8100",
+                                    "http://localhost",
+                                    "http://10.0.2.2:*",
+                                    "http://192.168.*.*:*",
+                                    "capacitor://*"
                                 )
                                 : List.of("http://localhost:*" )
                     );

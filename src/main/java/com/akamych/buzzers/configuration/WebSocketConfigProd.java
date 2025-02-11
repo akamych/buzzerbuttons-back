@@ -25,9 +25,13 @@ public class WebSocketConfigProd implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
                 .setAllowedOrigins(
-                    "https://buzzers.akamych.com",
-                    "https://localhost:8100",
-                    "https://localhost"
+                        "https://buzzers.akamych.com",
+                        "http://10.0.2.2:*",
+                        "http://192.168.*.*:*",
+                        "capacitor://*",
+                        "http://localhost:8100",
+                        "https://localhost:8100",
+                        "https://localhost"
                 )
                 .withSockJS();
     }
