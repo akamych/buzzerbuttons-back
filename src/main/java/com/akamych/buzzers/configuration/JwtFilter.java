@@ -51,6 +51,7 @@ public class JwtFilter extends OncePerRequestFilter {
         Cookie[] cookies = request.getCookies();
 
         if (cookies == null) {
+            System.out.println("No cookies for request");
             chain.doFilter(request, response);
             return;
         }
