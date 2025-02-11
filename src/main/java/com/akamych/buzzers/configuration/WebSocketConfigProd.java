@@ -32,7 +32,8 @@ public class WebSocketConfigProd implements WebSocketMessageBrokerConfigurer {
                         "http://*:8100",
                         "http://localhost:8100",
                         "https://localhost:8100",
-                        "https://localhost"
+                        "https://localhost",
+                        "http://localhost"
                 )
                 .withSockJS();
     }
