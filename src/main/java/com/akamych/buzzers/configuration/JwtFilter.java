@@ -35,6 +35,8 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
+        System.out.println("Request in the jwt filter");
+
         Cookie[] cookies = request.getCookies();
 
         if (cookies == null) {
@@ -42,6 +44,7 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
+        System.out.println("Request has cookies");
         Optional<Cookie> jwtTokenCookie = Arrays.stream(cookies)
                 .filter(cookie -> cookie.getName().equalsIgnoreCase(JWT_TOKEN_COOKIE_NAME))
                 .findFirst();
