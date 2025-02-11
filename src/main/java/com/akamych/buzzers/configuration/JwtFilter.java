@@ -15,6 +15,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -35,7 +36,18 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
-        System.out.println(request.toString());
+        Enumeration<String> headers = request.getHeaderNames();
+
+        while(headers.hasMoreElements()) {
+            String header = headers.nextElement();
+            System.out.println("Header " + header + ": " + request.getHeader(header));
+        }
+
+        System.out.println("Request uri:" + request.getRequestURI());
+        System.out.println("Remote host:" + request.getRemoteHost());
+        System.out.println("Remote address:" + request.getRemoteAddr());
+        System.out.println("Scheme:" + request.getScheme());
+
         Cookie[] cookies = request.getCookies();
 
         if (cookies == null) {
