@@ -15,7 +15,7 @@ spring:
     active: ${BUZZERS_PROFILE}
 
 jwt:
-  expiration: 600000
+  expiration: 1800000
   refresh-expiration: 86400000
 
 #logging:
