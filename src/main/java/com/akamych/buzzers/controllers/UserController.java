@@ -7,6 +7,7 @@ import com.akamych.buzzers.entities.User;
 import com.akamych.buzzers.services.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +33,7 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    public boolean joinGame(@RequestBody JoinGameRequest request, @AuthenticationPrincipal User user) {
+    public ResponseEntity<Boolean> joinGame(@RequestBody JoinGameRequest request, @AuthenticationPrincipal User user) {
         return userService.joinGame(request, user);
     }
 

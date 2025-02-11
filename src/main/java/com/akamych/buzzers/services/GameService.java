@@ -128,8 +128,15 @@ public class GameService {
             results.put(request.playerName(), ZonedDateTime.parse(request.pressedAt()).toString());
             game.setResults(results);
 
+
             if (results.size() == 1) {
                 game.setWinnerName(request.playerName());
+            } else {
+                Optional<Map.Entry<String, String>> earliestEntry = results.entrySet().stream()
+                        .min(Comparator.comparing(e -> ZonedDateTime.parse(e.getValue())));
+                if (earliestEntry.isPresent()) {
+                    game.setWinnerName(earliestEntry.get().getKey());
+                }
             }
             gameRepository.saveAndFlush(game);
 

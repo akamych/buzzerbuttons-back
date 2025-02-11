@@ -4,11 +4,13 @@ import com.akamych.buzzers.controllers.WebSocketController;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.config.annotation.*;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
+import org.springframework.web.socket.messaging.DefaultSimpUserRegistry;
 import org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor;
 
 @Configuration
@@ -28,4 +30,10 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 .setAllowedOrigins("http://localhost:5173")
                 .withSockJS();
     }
+
+    @Bean
+    public SimpUserRegistry simpUserRegistry() {
+        return new DefaultSimpUserRegistry();
+    }
+
 }

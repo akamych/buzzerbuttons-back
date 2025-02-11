@@ -25,7 +25,11 @@ public class JwtService {
         @Value("${BUZZERS_COOKIE_NAME}")
         private String JWT_TOKEN_COOKIE_NAME;
 
-        private Key getSigningKey() {
+    @Value("${spring.profiles.active:default}")
+    private String activeProfile;
+
+
+    private Key getSigningKey() {
             return Keys.hmacShaKeyFor(secret.getBytes());
         }
 
@@ -63,7 +67,7 @@ public class JwtService {
         cookie.setHttpOnly(true);
         cookie.setPath("/");
         cookie.setMaxAge(60 * 60);
-        cookie.setSecure(false);
+        cookie.setSecure(activeProfile != null && activeProfile.equalsIgnoreCase("prod"));
 
         servletResponse.addCookie(cookie);
     }
@@ -74,7 +78,7 @@ public class JwtService {
         cookie.setHttpOnly(true);
         cookie.setPath("/");
         cookie.setMaxAge(0);
-        cookie.setSecure(false);
+        cookie.setSecure(activeProfile != null && activeProfile.equalsIgnoreCase("prod"));
 
         servletResponse.addCookie(cookie);
     }

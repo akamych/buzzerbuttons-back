@@ -11,6 +11,8 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   websocket:
     enabled: true
+  profiles:
+    active: ${BUZZERS_PROFILE}
 
 jwt:
   expiration: 600000

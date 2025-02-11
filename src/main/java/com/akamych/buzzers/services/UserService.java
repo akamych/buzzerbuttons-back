@@ -5,11 +5,13 @@ import com.akamych.buzzers.dtos.GameInfoResponse;
 import com.akamych.buzzers.dtos.JoinGameRequest;
 import com.akamych.buzzers.entities.Game;
 import com.akamych.buzzers.entities.User;
+import com.akamych.buzzers.enums.ErrorResponseCodesEnum;
 import com.akamych.buzzers.enums.UserRolesEnum;
 import com.akamych.buzzers.repositories.GameRepository;
 import com.akamych.buzzers.repositories.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -109,11 +112,26 @@ public class UserService {
     }
 
     @Transactional
-    public boolean joinGame(JoinGameRequest request, User user) {
+    public ResponseEntity<Boolean> joinGame(JoinGameRequest request, User user) {
 
         Game game = gameService.getById(request.game());
         if (game == null || game.isDeleted()) {
-            return false;
+            return ResponseEntity
+                    .status(ErrorResponseCodesEnum.NO_SUCH_GAME.getCode())
+                    .body(false);
+        }
+
+        if (game.getPlayers() != null && game.getPlayers().size() > 0) {
+            Optional<User> nameDuplicateUser = game.getPlayers().stream()
+                    .filter(iterate -> iterate.getPlayerName().equalsIgnoreCase(request.name()))
+                    .findFirst();
+
+            if (nameDuplicateUser.isPresent() && !nameDuplicateUser.get().equals(user)) {
+                return ResponseEntity
+                        .status(ErrorResponseCodesEnum.DOUBLE_PLAYER_NAME.getCode())
+                        .body(false);
+            }
+
         }
 
         user.setPlayingGame(game);
@@ -123,7 +141,7 @@ public class UserService {
         game.getPlayers().add(user);
         gameRepository.saveAndFlush(game);
 
-        return true;
+        return ResponseEntity.ok(true);
     }
 
     private void deleteCurrentUser(User user) {
