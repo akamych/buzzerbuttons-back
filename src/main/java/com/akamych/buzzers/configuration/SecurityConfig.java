@@ -20,7 +20,7 @@ import java.util.List;
 public class SecurityConfig {
     private final JwtFilter jwtFilter;
 
-    @Value("${spring.profiles.active}")
+    @Value("${BUZZERS_PROFILE}")
     private String activeProfile;
 
     public SecurityConfig(JwtFilter jwtFilter) {
