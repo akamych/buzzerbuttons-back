@@ -41,18 +41,19 @@ public class SecurityConfig {
                     corsConfiguration.setAllowedOriginPatterns(
                             activeProfile.equalsIgnoreCase("prod")
                                     ? List.of(
-                                            "*"
-//                                        "https://buzzers.akamych.com",
-//                                        "http://localhost:8100",
-//                                        "http://10.0.2.2:*",
-//                                        "http://192.168.*.*:*",
-//                                        "capacitor://*"
+                                        "https://buzzers.akamych.com",
+                                        "http://localhost:8100",
+                                        "http://*:8100",
+                                        "http://10.0.2.2:*",
+                                        "http://192.168.*.*:*",
+                                        "capacitor://*"
                                     )
                                     : List.of("http://localhost:*" )
                     );
 
                     corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     corsConfiguration.setAllowedHeaders(List.of("*"));
+                    corsConfiguration.setAllowCredentials(true);
                     return corsConfiguration;
                 }))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
