@@ -1,5 +1,7 @@
 package com.akamych.buzzers.configuration;
 
+import com.akamych.buzzers.enums.UserRolesEnum;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,20 +12,19 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 
 import java.util.List;
 
 @Configuration
 public class SecurityConfig {
     private final JwtFilter jwtFilter;
-    private final RequestLoggingFilter requestLoggingFilter;
 
     @Value("${spring.profiles.active}")
     private String activeProfile;
 
-    public SecurityConfig(JwtFilter jwtFilter, RequestLoggingFilter requestLoggingFilter) {
+    public SecurityConfig(JwtFilter jwtFilter) {
         this.jwtFilter = jwtFilter;
-        this.requestLoggingFilter = requestLoggingFilter;
     }
 
     @Bean
@@ -34,7 +35,6 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .addFilterBefore(requestLoggingFilter, UsernamePasswordAuthenticationFilter.class)
                 .csrf(csrf -> csrf.ignoringRequestMatchers("/ws/**").disable())
                 .cors(cors -> cors.configurationSource(request -> {
                     var corsConfiguration = new CorsConfiguration();
