@@ -35,12 +35,9 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
-        System.out.println("request is here");
-
         Cookie[] cookies = request.getCookies();
 
         if (cookies == null) {
-            System.out.println("no cookies");
             chain.doFilter(request, response);
             return;
         }
@@ -50,7 +47,6 @@ public class JwtFilter extends OncePerRequestFilter {
                 .findFirst();
 
         if (jwtTokenCookie.isEmpty()) {
-            System.out.println("jwt cookie empty");
             chain.doFilter(request, response);
             return;
         }
@@ -61,12 +57,10 @@ public class JwtFilter extends OncePerRequestFilter {
             token = jwtTokenCookie.get().getValue();
         } catch (Exception e) {
             jwtService.deleteJwtCookie(response);
-            System.out.println("no jwt value");
             chain.doFilter(request, response);
             return;
         }
 
-        System.out.println("up to validation");
         if (token == null || !jwtService.validateToken(token)) {
             jwtService.deleteJwtCookie(response);
             chain.doFilter(request, response);
