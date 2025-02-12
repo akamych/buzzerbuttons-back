@@ -6,6 +6,7 @@ import com.akamych.buzzers.dtos.PressRequest;
 import com.akamych.buzzers.entities.Game;
 import com.akamych.buzzers.entities.User;
 import com.akamych.buzzers.repositories.GameRepository;
+import com.akamych.buzzers.services.stats.StatsDailyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
@@ -22,6 +24,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class GameService {
     private final GameRepository gameRepository;
+    private final StatsDailyService statsDailyService;
     private final ReentrantLock gameResultsLock = new ReentrantLock();
 
     private Long generateId() {
@@ -48,6 +51,7 @@ public class GameService {
             }
         }
 
+        CompletableFuture.runAsync(() -> statsDailyService.increaseGamesCounter());
         return newGame;
 
     }
@@ -77,6 +81,7 @@ public class GameService {
         game.setActivatedAt(ZonedDateTime.parse(activatedAt));
         gameRepository.saveAndFlush(game);
 
+        CompletableFuture.runAsync(() -> statsDailyService.increaseGamesActivatedCounter());
         return true;
     }
 
@@ -95,6 +100,7 @@ public class GameService {
         game.setWinnerName(null);
         gameRepository.saveAndFlush(game);
 
+        CompletableFuture.runAsync(() -> statsDailyService.increaseRoundsCounter());
         return true;
     }
 
@@ -138,8 +144,10 @@ public class GameService {
                     game.setWinnerName(earliestEntry.get().getKey());
                 }
             }
+
             gameRepository.saveAndFlush(game);
 
+            CompletableFuture.runAsync(() -> statsDailyService.increaseButtonsPressedCounter());
             return results;
         } finally {
             gameResultsLock.unlock();
@@ -200,7 +208,7 @@ public class GameService {
 
     }
 
-    @Scheduled(fixedRate = 300000)
+    @Scheduled(fixedRate = 3600000)
     @Transactional
     public void scheduledDeletion() {
 

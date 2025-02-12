@@ -9,6 +9,7 @@ import com.akamych.buzzers.enums.ErrorResponseCodesEnum;
 import com.akamych.buzzers.enums.UserRolesEnum;
 import com.akamych.buzzers.repositories.GameRepository;
 import com.akamych.buzzers.repositories.UserRepository;
+import com.akamych.buzzers.services.stats.StatsDailyService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,6 +32,7 @@ public class UserService {
     private final GameRepository gameRepository;
     private final GameService gameService;
     private final JwtService jwtService;
+    private final StatsDailyService statsDailyService;
 
     @Transactional
     public AuthResponse createHost(HttpServletResponse response, User user) {
@@ -53,6 +56,8 @@ public class UserService {
         userRepository.saveAndFlush(newUser);
 
         jwtService.setJwtCookie(newUser, response);
+
+        CompletableFuture.runAsync(() -> statsDailyService.increaseHostsCounter());
 
         return AuthResponse.builder()
                 .host(true)
@@ -141,18 +146,9 @@ public class UserService {
         game.getPlayers().add(user);
         gameRepository.saveAndFlush(game);
 
+        CompletableFuture.runAsync(() -> statsDailyService.increasePlayersCounter());
+
         return ResponseEntity.ok(true);
-    }
-
-    private void deleteCurrentUser(User user) {
-
-        if (user.getHostingGame() != null) {
-            gameService.deleteGame(user.getHostingGame());
-        }
-
-        if (user != null) {
-            userRepository.delete(user);
-        }
     }
 
     public boolean logout(HttpServletResponse response, User user) {
@@ -194,7 +190,7 @@ public class UserService {
     }
 
 
-    @Scheduled(fixedRate = 300000)
+    @Scheduled(fixedRate = 3600000)
     @Transactional
     public void scheduledDeletion() {
 
