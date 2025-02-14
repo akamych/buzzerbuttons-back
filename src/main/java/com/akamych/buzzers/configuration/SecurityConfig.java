@@ -1,7 +1,5 @@
 package com.akamych.buzzers.configuration;
 
-import com.akamych.buzzers.enums.UserRolesEnum;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,7 +10,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 
 import java.util.List;
 

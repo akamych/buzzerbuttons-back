@@ -1,23 +1,15 @@
 package com.akamych.buzzers.controllers;
 
-import com.akamych.buzzers.dtos.GameInfoResponse;
 import com.akamych.buzzers.dtos.GameStatusResponse;
 import com.akamych.buzzers.dtos.PressRequest;
-import com.akamych.buzzers.entities.User;
 import com.akamych.buzzers.services.GameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.time.ZonedDateTime;
 import java.util.Map;
 
 @Controller

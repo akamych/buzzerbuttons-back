@@ -13,6 +13,27 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   websocket:
     enabled: true
+  mail:
+    host: ${BUZZERS_MAIL_HOST}
+    port: ${BUZZERS_MAIL_PORT}
+    username: ${BUZZERS_MAIL_USER}
+    password: ${BUZZERS_MAIL_PWD}
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            trust: ${BUZZERS_MAIL_HOST}
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+
+sendgrid:
+  api-key: ${BUZZERS_SENDGRID_APIKEY}
 
 jwt:
   expiration: 1800000

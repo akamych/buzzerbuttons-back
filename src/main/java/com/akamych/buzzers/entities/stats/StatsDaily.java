@@ -1,9 +1,11 @@
 package com.akamych.buzzers.entities.stats;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.*;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.ZonedDateTime;
 

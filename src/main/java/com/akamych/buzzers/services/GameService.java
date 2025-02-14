@@ -8,7 +8,6 @@ import com.akamych.buzzers.entities.User;
 import com.akamych.buzzers.repositories.GameRepository;
 import com.akamych.buzzers.services.stats.StatsDailyService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

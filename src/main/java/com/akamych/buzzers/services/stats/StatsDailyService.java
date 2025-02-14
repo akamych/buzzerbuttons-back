@@ -21,30 +21,36 @@ public class StatsDailyService {
 
     private final ReentrantLock creationLock = new ReentrantLock();
 
-    private StatsDaily createTodayStatsDaily(ZonedDateTime today) {
-        return statsDailyRepository.saveAndFlush(StatsDaily.builder().date(today).build());
+    private StatsDaily createStatsDailyByDate(ZonedDateTime date) {
+        return statsDailyRepository.saveAndFlush(StatsDaily.builder().date(date).build());
     }
 
-    private StatsDaily getTodayStatsDaily() {
-        ZonedDateTime today = LocalDate.now(ZoneOffset.UTC).atStartOfDay(ZoneOffset.UTC);
-
-        Optional<StatsDaily> optionalStatsDaily = statsDailyRepository.findByDate(today);
+    private StatsDaily getStatsDailyByDate(ZonedDateTime date) {
+        Optional<StatsDaily> optionalStatsDaily = statsDailyRepository.findByDate(date);
         if (optionalStatsDaily.isPresent()) {
             return optionalStatsDaily.get();
         }
 
         creationLock.lock();
 
-        optionalStatsDaily = statsDailyRepository.findByDate(today);
+        optionalStatsDaily = statsDailyRepository.findByDate(date);
         if (optionalStatsDaily.isPresent()) {
             return optionalStatsDaily.get();
         }
 
         try {
-            return createTodayStatsDaily(today);
+            return createStatsDailyByDate(date);
         } finally {
             creationLock.unlock();
         }
+    }
+
+    public StatsDaily getYesterdayStatsDaily() {
+        return getStatsDailyByDate(LocalDate.now(ZoneOffset.UTC).atStartOfDay(ZoneOffset.UTC).minusDays(1));
+    }
+
+    private StatsDaily getTodayStatsDaily() {
+        return getStatsDailyByDate(LocalDate.now(ZoneOffset.UTC).atStartOfDay(ZoneOffset.UTC));
     }
 
     @Transactional
