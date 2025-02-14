@@ -25,7 +25,7 @@ public class EmailService {
     private String REPORT_EMAIL;
     private final StatsDailyService statsDailyService;
 
-    @Value("${sendgrid.api-key}")
+    @Value("${BUZZERS_SENDGRID_APIKEY}")
     private String sendGridApiKey;
 
     public void sendEmail(String to, String subject, String content) {

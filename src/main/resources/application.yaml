@@ -32,9 +32,6 @@ spring:
           timeout: 5000
           writetimeout: 5000
 
-sendgrid:
-  api-key: ${BUZZERS_SENDGRID_APIKEY}
-
 jwt:
   expiration: 1800000
 
