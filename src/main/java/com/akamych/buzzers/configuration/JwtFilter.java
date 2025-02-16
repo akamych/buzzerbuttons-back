@@ -35,10 +35,11 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
+        System.out.println("=== NEW REQUEST ===");
         Cookie[] cookies = request.getCookies();
 
         if (cookies == null) {
-//            System.out.println("No cookies for request");
+            System.out.println("No cookies for request");
             chain.doFilter(request, response);
             return;
         }
