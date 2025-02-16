@@ -34,18 +34,6 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-//
-//        Enumeration<String> headers = request.getHeaderNames();
-//
-//        while(headers.hasMoreElements()) {
-//            String header = headers.nextElement();
-//            System.out.println("Header " + header + ": " + request.getHeader(header));
-//        }
-//
-//        System.out.println("Request uri:" + request.getRequestURI());
-//        System.out.println("Remote host:" + request.getRemoteHost());
-//        System.out.println("Remote address:" + request.getRemoteAddr());
-//        System.out.println("Scheme:" + request.getScheme());
 
         Cookie[] cookies = request.getCookies();
 
