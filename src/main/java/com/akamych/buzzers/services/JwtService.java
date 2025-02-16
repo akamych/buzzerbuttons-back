@@ -16,17 +16,11 @@ import java.util.Date;
 @Service
 public class JwtService {
 
-        @Value("${spring.profiles.active}")
-        private String activeProfile;
-
         @Value("${jwt.expiration}")
         private long expiration;
 
         @Value("${BUZZERS_JWT_SEC}")
         private String secret;
-
-        @Value("${BUZZERS_COOKIE_NAME}")
-        private String JWT_TOKEN_COOKIE_NAME;
 
 
     private Key getSigningKey() {
@@ -59,27 +53,5 @@ public class JwtService {
             } catch (JwtException e) {
                 return false;
             }
-    }
-
-    public void setJwtCookie(User user, HttpServletResponse servletResponse) {
-        Cookie cookie = new Cookie(JWT_TOKEN_COOKIE_NAME, generateToken(user));
-
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(60 * 60);
-        cookie.setSecure(activeProfile != null && activeProfile.equalsIgnoreCase("prod"));
-
-        servletResponse.addCookie(cookie);
-    }
-
-    public void deleteJwtCookie (HttpServletResponse servletResponse) {
-        Cookie cookie = new Cookie(JWT_TOKEN_COOKIE_NAME, null);
-
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(0);
-        cookie.setSecure(activeProfile != null && activeProfile.equalsIgnoreCase("prod"));
-
-        servletResponse.addCookie(cookie);
     }
 }

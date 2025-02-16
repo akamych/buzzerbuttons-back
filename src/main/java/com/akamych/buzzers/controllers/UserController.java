@@ -24,8 +24,6 @@ public class UserController {
 
     @GetMapping("/host")
     public AuthResponse createHost(HttpServletResponse response, @AuthenticationPrincipal User user) {
-        System.out.println("host game request");
-        System.out.println("user:" + (user == null ? "null" : user.toString()));
         return userService.createHost(response, user);
     }
 
@@ -51,8 +49,6 @@ public class UserController {
 
     @GetMapping("/game-info")
     public GameInfoResponse getGameInfo(@AuthenticationPrincipal User user) {
-        System.out.println("get game info request");
-        System.out.println("user:" + (user == null ? "null" : user.toString()));
         return userService.getGameInfo(user);
     }
 }
