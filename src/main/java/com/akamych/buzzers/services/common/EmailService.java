@@ -21,6 +21,9 @@ import java.time.format.DateTimeFormatter;
 @Service
 @RequiredArgsConstructor
 public class EmailService {
+
+    @Value("${spring.profiles.active}")
+    private String activeProfile;
     @Value("${BUZZERS_REPORTING_EMAIL}")
     private String REPORT_EMAIL;
     private final StatsDailyService statsDailyService;
@@ -62,6 +65,11 @@ public class EmailService {
     @Scheduled(fixedRate = 86400000)
     @Transactional
     public void sendDailyStats() {
+
+        if (!activeProfile.equalsIgnoreCase("prod")) {
+            System.out.println("No email sent - development mode");
+            return;
+        }
 
         StatsDaily yesterdayStats = statsDailyService.getYesterdayStatsDaily();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy/MM/dd");
