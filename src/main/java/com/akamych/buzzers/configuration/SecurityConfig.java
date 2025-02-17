@@ -62,6 +62,8 @@ public class SecurityConfig {
                                 "/auth",
                                 "/host",
                                 "/play",
+                                "/ws",
+                                "/ws/**",
                                 "/log-out"
                         ).permitAll()
                         .anyRequest().authenticated())
