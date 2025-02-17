@@ -35,11 +35,9 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
-        System.out.println("=== NEW REQUEST ===");
         Cookie[] cookies = request.getCookies();
 
         if (cookies == null) {
-            System.out.println("No cookies for request");
             chain.doFilter(request, response);
             return;
         }
@@ -59,40 +57,33 @@ public class JwtFilter extends OncePerRequestFilter {
             token = jwtTokenCookie.get().getValue();
         } catch (Exception e) {
             jwtService.deleteJwtCookie(response);
-            String authHeader = request.getHeader("Authorization");
-            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                chain.doFilter(request, response);
-                return;
-            }
-
-            if (token == null || !jwtService.validateToken(token)) {
-                jwtService.deleteJwtCookie(response);
-                response.setHeader("Authorization", null);
-                chain.doFilter(request, response);
-                return;
-            }
-
-            String userId = jwtService.getUserId(token);
-            if (userId == null) {
-                jwtService.deleteJwtCookie(response);
-                response.setHeader("Authorization", null);
-                chain.doFilter(request, response);
-                return;
-            }
-
-            userRepository.findById(UUID.fromString(userId)).ifPresentOrElse(user -> {
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(user, null, null);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                jwtService.setJwtCookie(user, response);
-                response.setHeader("Authorization", "Bearer " + jwtService.generateToken(user));
-            }, () -> {
-                jwtService.deleteJwtCookie(response);
-                response.setHeader("Authorization", null);
-            });
-
-
             chain.doFilter(request, response);
+            return;
         }
+
+        if (token == null || !jwtService.validateToken(token)) {
+            jwtService.deleteJwtCookie(response);
+            chain.doFilter(request, response);
+            return;
+        }
+
+        String userId = jwtService.getUserId(token);
+        if (userId == null) {
+            jwtService.deleteJwtCookie(response);
+            chain.doFilter(request, response);
+            return;
+        }
+
+        userRepository.findById(UUID.fromString(userId)).ifPresentOrElse(user -> {
+            UsernamePasswordAuthenticationToken authentication =
+                    new UsernamePasswordAuthenticationToken(user, null, null);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            jwtService.setJwtCookie(user, response);
+        }, () -> {
+            jwtService.deleteJwtCookie(response);
+        });
+
+
+        chain.doFilter(request, response);
     }
 }
