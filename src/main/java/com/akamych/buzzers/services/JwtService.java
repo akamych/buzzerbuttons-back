@@ -67,6 +67,7 @@ public class JwtService {
         cookie.setHttpOnly(true);
         cookie.setPath("/");
         cookie.setMaxAge(60 * 60);
+        cookie.setAttribute("SameSite", "None");
         cookie.setSecure(activeProfile != null && activeProfile.equalsIgnoreCase("prod"));
 
         servletResponse.addCookie(cookie);
@@ -78,6 +79,7 @@ public class JwtService {
         cookie.setHttpOnly(true);
         cookie.setPath("/");
         cookie.setMaxAge(0);
+        cookie.setAttribute("SameSite", "None");
         cookie.setSecure(activeProfile != null && activeProfile.equalsIgnoreCase("prod"));
 
         servletResponse.addCookie(cookie);
