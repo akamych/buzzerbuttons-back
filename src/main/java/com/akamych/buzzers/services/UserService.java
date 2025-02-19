@@ -29,6 +29,7 @@ public class UserService {
     private final GameRepository gameRepository;
     private final GameService gameService;
     private final JwtService jwtService;
+    private final WebsocketService websocketService;
     private final StatsDailyService statsDailyService;
 
     @Transactional
@@ -36,8 +37,11 @@ public class UserService {
 
         if (user != null) {
             if (user.getHostingGame() != null) {
-                gameService.deleteGame(user.getHostingGame());
+                Game game = user.getHostingGame();
+                websocketService.informPlayersAboutHostLeaving(game.getGameId());
+                gameService.deleteGame(game);
             } else if (user.getPlayingGame() != null) {
+                websocketService.informHostAboutPlayerLeaving(user.getPlayingGame().getGameId(), user.getPlayerName());
                 gameService.removePlayer(user);
             }
             userRepository.delete(user);
@@ -159,7 +163,9 @@ public class UserService {
         }
 
         if (user.getHostingGame() != null) {
-            gameService.deleteGame(user.getHostingGame());
+            Game game = user.getHostingGame();
+            websocketService.informPlayersAboutHostLeaving(game.getGameId());
+            gameService.deleteGame(game);
         }
 
         userRepository.delete(user);
